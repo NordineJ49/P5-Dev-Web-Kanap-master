@@ -52,10 +52,10 @@ const displayProduct = (product) => {
 
     document.getElementById('description').textContent = product.description
 
-    const colors = product.colors
-    const colorSelect = document.getElementById('colors')
+    let colors = product.colors
+    let colorSelect = document.getElementById('colors')
     for (let index in colors) {
-        const opt = document.createElement('option')
+        let opt = document.createElement('option')
         opt.textContent = colors[index]
         opt.value = colors[index]
         colorSelect.append(opt)
@@ -87,12 +87,12 @@ const addCart = (prodID) => {
     // verifier qu'un couleur est selectionné
     const selectColor = checkColor()
     // verifier que la quantité est comprise entre 1 et 100 
-    const quantity = checkQuantity()
-    if (selectColor && quantity) {
+    const selectQuantity = checkQuantity()
+    if (selectColor && selectQuantity) {
         const prod = {
             id: prodID,
             col: selectColor,
-            qty: quantity,
+            qty: selectQuantity,
         }
         let basket;
 
@@ -102,8 +102,7 @@ const addCart = (prodID) => {
             basket = []
             basket.push(prod)
         } else {
-            // recuperer le localstorage
-            // JSON.parse
+            // recuperer le localstorage (JSON.parse)
             basket = JSON.parse(localStorage.getItem('panier'))
             // Verifier le couple (id + color) si c'est le meme, je modifie la quantité
             idColor()
@@ -115,45 +114,48 @@ const addCart = (prodID) => {
 }
 
 const checkColor = () => {
-    // si valeur null alert ("vous devez selectionner une couleur") + return false 
-    const colorOk = document.getElementsByTagName('option').value
-    if (!colorOk) {
-        alert("Vous devez séléctionner une couleur")
+    // si valeur null alert("vous devez selectionner une couleur") + return false
+    const valeurCouleur = document.querySelector('option')
+    const valeur = valeurCouleur.textContent
+    console.log(valeur)
+    if (!valeur) {
+        console.log("Vous devez séléctionner une couleur")
         return false
     }
     // sinon retourner valeur
     else {
-        console.log(colorOk)
-        return colorOk
+        return valeur
     }
 }
 
+
 const checkQuantity = () => {
     // si valeur null alert ("vous devez selectionner une quantité entre 1 et 100") + return false
-    const quantityOk = document.getElementById('quantity').value
-    if (!quantityOk) {
-        alert("Vous devez séléctionner un quantité comprise entre 1 et 100 inclus")
+    const valeurQuantité = document.getElementById('quantity')
+    const valeur = valeurQuantité.value
+    console.log(valeur)
+    if (!valeur) {
+        console.log("Vous devez séléctionner un quantité comprise entre 1 et 100 inclus")
         return false
     }
     // si value entre 1 et 101 retourner false 
-    else if (quantityOk < 0 || quantityOk > 100) {
+    else if (valeur <= 0 || valeur >= 101) {
+        console.log("Vous devez séléctionner un quantité comprise entre 1 et 100 inclus")
         return false
     }
     // sinon retourner valeur
     else {
-        return quantityOk
+        return valeur
     }
 }
 
 // const idColor = () => {
 //     if () {
-
 //     } else {
-
 //     }
 // }
 
 
 fetchData()
-checkColor()
-checkQuantity()
+addCart()
+
