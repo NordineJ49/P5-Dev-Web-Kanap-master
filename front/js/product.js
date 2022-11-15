@@ -76,12 +76,16 @@ const insertTagElem = (image) => {
 }
 
 
-
 const attachEvent = (prodID) => {
     document.getElementById('addToCart').addEventListener("click", () => { addCart(prodID) })
 }
 
 
+/**
+ * 
+ * @param {string} prodID 
+ * @returns false
+ */
 // fonction qui permet de vérifier et modifier le panier 
 const addCart = (prodID) => {
     // verifier qu'un couleur est selectionné
@@ -95,7 +99,6 @@ const addCart = (prodID) => {
             qty: selectQuantity,
         }
         let basket;
-
         // -verifier que le localstorage est vide
         if (!localStorage.getItem('panier')) {
             // ajouter prod a panier
@@ -105,57 +108,53 @@ const addCart = (prodID) => {
             // recuperer le localstorage (JSON.parse)
             basket = JSON.parse(localStorage.getItem('panier'))
             // Verifier le couple (id + color) si c'est le meme, je modifie la quantité
-            idColor()
+            const result = basket.find((elt) => elt.id === prodID && elt.col === selectColor)
+            console.log(result)
+            if (result) {
+                const newQuantity = parseInt(result.qty) + parseInt(prod.qty)
+                result.qty = newQuantity
+            } else {
+                basket.push(prod)
+            }
             // sinon je rajoute le produit au local storage
         }
-        localStorage.setItem('Panier', JSON.stringify(basket))
+        localStorage.setItem('panier', JSON.stringify(basket))
     }
     return false
 }
 
+
+/**
+ * vérifie que la valeur n'est pas vide 
+ * @returns 
+ */
 const checkColor = () => {
     // si valeur null alert("vous devez selectionner une couleur") + return false
-    const valeurCouleur = document.querySelector('option')
-    const valeur = valeurCouleur.textContent
-    console.log(valeur)
+    const valeurCouleur = document.querySelector('#colors')
+    const valeur = valeurCouleur.value
     if (!valeur) {
-        console.log("Vous devez séléctionner une couleur")
+        alert("Vous devez séléctionner une couleur")
         return false
     }
     // sinon retourner valeur
-    else {
-        return valeur
-    }
+    return valeur
 }
 
-
+/**
+ * vérifie la validité de la quantité 
+ * @returns 
+ */
 const checkQuantity = () => {
     // si valeur null alert ("vous devez selectionner une quantité entre 1 et 100") + return false
     const valeurQuantité = document.getElementById('quantity')
     const valeur = valeurQuantité.value
-    console.log(valeur)
-    if (!valeur) {
-        console.log("Vous devez séléctionner un quantité comprise entre 1 et 100 inclus")
-        return false
-    }
-    // si value entre 1 et 101 retourner false 
-    else if (valeur <= 0 || valeur >= 101) {
-        console.log("Vous devez séléctionner un quantité comprise entre 1 et 100 inclus")
+    if (!valeur || valeur <= 0 || valeur >= 101) {
+        alert("Vous devez séléctionner un quantité comprise entre 1 et 100 inclus")
         return false
     }
     // sinon retourner valeur
-    else {
-        return valeur
-    }
+    return valeur
 }
-
-// const idColor = () => {
-//     if () {
-//     } else {
-//     }
-// }
 
 
 fetchData()
-addCart()
-
