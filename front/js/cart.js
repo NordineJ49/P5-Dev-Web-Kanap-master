@@ -28,8 +28,12 @@ const getCart = async () => {
         }
     }
     updateCart(cart)
+    attachEvent()
 }
-getCart()
+// 
+window.onload = () => {
+    getCart()
+}
 
 
 const displayProduct = (data, cart) => {
@@ -96,8 +100,8 @@ const displayProduct = (data, cart) => {
     inputQty.setAttribute('min', '1')
     inputQty.setAttribute('max', '100')
     inputQty.setAttribute('value', data.qty)
-    inputQty.addEventListener("change", (event) => {
-        changeProdQty(data, cart, event)
+    inputQty.addEventListener("change", (e) => {
+        changeProdQty(cart, e)
     })
     div5.appendChild(inputQty)
 
@@ -112,9 +116,8 @@ const displayProduct = (data, cart) => {
     paragraph4.setAttribute('class', "deleteItem")
     paragraph4.textContent = "Supprimer"
     paragraph4.addEventListener("click", (e) => {
-        const elt = e.target;
-        const ancestor = elt.closest("article");
-        deleteProd(data, cart, ancestor);
+
+        deleteProd(cart, e);
     })
 
     div6.appendChild(paragraph4)
@@ -142,44 +145,78 @@ const displayProduct = (data, cart) => {
 
 // creer trois fonction
 // -modifier la quantité du produit (mettre a j la qty et prix total)
-const changeProdQty = (data, cart, event) => {
-    console.log(event)
-    event.target.value
-    console.log(event.currentTarget.value)
+const changeProdQty = (cart, e) => {
+    console.log(e)
     // recuperer local storage
-
+    const elt = e.target;
+    const ancestor = elt.closest("article");
+    const ancestorId = ancestor.id
+    const ancestorCol = ancestor.getAttribute('data-color')
+    let cartItems = JSON.parse(localStorage.getItem('panier'))
+    cartItems.forEach((elem, index) => {
+        if (elem.id === ancestorId && elem.col === ancestorCol) {
+            cartItems[index].qty = e.target.value
+            cart[index].qty = e.target.value
+        }
+    })
+    localStorage.setItem('panier', JSON.stringify(cartItems))
     updateCart(cart)
 }
 
-// -supprimer un produit (mettre a j la qty et prix total)
-const deleteProd = (data, cart, ancestor) => {
 
-    console.log(ancestor)
-    ancestor.remove()
-    ancestorId = ancestor.id
+
+/**
+ * Supprime un produit dans le localStorage, dans le DOM et dans le tableau global
+ * @param {Array} cart 
+ * @param {event} e 
+ */
+const deleteProd = (cart, e) => {
+    const elt = e.target;
+    const ancestor = elt.closest("article");
+    const ancestorId = ancestor.id
+    const ancestorCol = ancestor.getAttribute('data-color')
     // recuperer array 'panier' dans le localstorage avec tout les objets a l'interieur
     let cartItems = JSON.parse(localStorage.getItem('panier'))
-    // recupérer l'id tu produit a supprimer
-    for (let infoProduct of cartItems) {
-        let idProduct = infoProduct.id
-        if (ancestorId === idProduct) {
-            console.log(cartItems.indexOf(idProduct))
-        }
-        // retirer un produit du panier .pop() .slice()
 
-        // pour cart, find data.id et le supprimer
-        updateCart(cart)
-    }
+    // for (let index in cartItems) {
+    //     let idProduct = cartItems[index].id
+    //     let colProduct = cartItems[index].col
+    //     if (ancestorId === idProduct && ancestorCol === colProduct) {
+    //         cartItems.splice(index, 1)
+    //         cart.splice(index, 1)
+    //     }
+    // } 
+
+    cartItems.forEach((elem, index) => {
+        if (elem.id === ancestorId && elem.col === ancestorCol) {
+            cartItems.splice(index, 1)
+            cart.splice(index, 1)
+        }
+    });
+
+    // const index = cartItems.findIndex(elem => elem.id === ancestorId && elem.col === ancestorCol)
+    // if (index != -1) {
+    //     cartItems.splice(index, 1)
+    //     cart.splice(index, 1) 
+    // }
+
+    localStorage.setItem('panier', JSON.stringify(cartItems))
+    updateCart(cart)
+    console.log(ancestor)
+    ancestor.remove()
 }
 
 // -fonction qui met a j la qty et prix total
 const updateCart = (cart) => {
     console.log(cart)
-
-
-    // qty selectionné + (ou -) la quantité du panier
-    // prix des éléments à ajouter + (ou -) le prix des éléments du panier
-    // afficher le prix et la qty final
+    let totPrice = 0
+    let totQty = 0
+    cart.forEach(elem => {
+        totPrice += parseInt(elem.price) * parseInt(elem.qty)
+        totQty += parseInt(elem.qty)
+    })
+    document.getElementById('totalQuantity').textContent = totQty
+    document.getElementById('totalPrice').textContent = totPrice
 }
 
 
