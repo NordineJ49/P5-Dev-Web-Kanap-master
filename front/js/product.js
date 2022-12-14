@@ -1,15 +1,3 @@
-// creer une fonction getId (methode newUrlSearchParam)
-// creer une fonction fetch + id
-// fonction affichage de l'élément (prix couleur etc)
-// fonction addEventListener "click" qui va appeler une fonction addCart
-
-// creer fonction addCart
-// cette fonction doit :
-// -verifier que le localstorage est vide
-// -ajouter l'objet avec comme propriétés (id couleur quantité) et l'ajouter au localstorage
-// -si le localstorage n'est pas vide (vérifié si le produit n'est pas deja dans le localstorage: soit je modifie la quantité, soit je rajoute le nouveau produit)
-
-//ressource : find (js) runbookdev
 
 
 // fonction fetch + récupération de l'ID
@@ -86,12 +74,11 @@ const attachEvent = (prodID) => {
  * @param {string} prodID 
  * @returns false
  */
-// fonction qui permet de vérifier et modifier le panier 
 const addCart = (prodID) => {
-    // verifier qu'un couleur est selectionné
+    // on vérifie la quantité et la couleur
     const selectColor = checkColor()
-    // verifier que la quantité est comprise entre 1 et 100 
     const selectQuantity = checkQuantity()
+    // si couleur et quantité OK
     if (selectColor && selectQuantity) {
         const prod = {
             id: prodID,
@@ -99,11 +86,12 @@ const addCart = (prodID) => {
             qty: selectQuantity,
         }
         let basket;
-        // -verifier que le localstorage est vide
+        // -verifier que le localstorage est vide et push prod
         if (!localStorage.getItem('panier')) {
             // ajouter prod a panier
             basket = []
             basket.push(prod)
+            // si localstorage pas vide
         } else {
             // recuperer le localstorage (JSON.parse)
             basket = JSON.parse(localStorage.getItem('panier'))
@@ -116,8 +104,8 @@ const addCart = (prodID) => {
             } else {
                 basket.push(prod)
             }
-            // sinon je rajoute le produit au local storage
         }
+        // on remet le panier dans le localstorage (JSON.stringify)
         localStorage.setItem('panier', JSON.stringify(basket))
     }
     return false
@@ -126,7 +114,7 @@ const addCart = (prodID) => {
 
 /**
  * vérifie que la valeur n'est pas vide 
- * @returns 
+ * @returns
  */
 const checkColor = () => {
     // si valeur null alert("vous devez selectionner une couleur") + return false

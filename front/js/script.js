@@ -7,7 +7,7 @@
 
 
 
-// fonction pour récupérer la data json
+// fonction fetch pour récupérer la data json
 const fetchData = async () => {
     try {
         const url = "http://localhost:3000/api/products";
@@ -22,14 +22,14 @@ const fetchData = async () => {
     } catch (error) {
         alert(error)
     }
-};
+}
 
 /**
  * itere le tableau et créer les elements (html)
  * @param {Array} products 
  */
 const displayData = (products) => {
-    // boucle FOR OF pour 
+    // boucle FOR OF pour parcourir un objet iterable et qui donne des instructions pour la valeur de chaque propriété
     for (const product of products) {
 
 
