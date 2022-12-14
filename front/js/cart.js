@@ -116,7 +116,6 @@ const displayProduct = (data, cart) => {
     paragraph4.setAttribute('class', "deleteItem")
     paragraph4.textContent = "Supprimer"
     paragraph4.addEventListener("click", (e) => {
-
         deleteProd(cart, e);
     })
 
@@ -228,18 +227,71 @@ const updateCart = (cart) => {
 
 const attachEvent = () => {
     document.getElementById('order').addEventListener("click", () => { order() })
+    document.getElementById('firstName').addEventListener("change", (e) => { checkReg1(e.target.value, 'firstName') })
+    document.getElementById('lastName').addEventListener("change", (e) => { checkReg1(e.target.value, 'lastName') })
+    document.getElementById('city').addEventListener("change", (e) => { checkReg1(e.target.value, 'city') })
+    document.getElementById('adress').addEventListener("change", (e) => { checkReg2(e.target.value, 'adress') })
+    document.getElementById('email').addEventListener("change", (e) => { checkReg3(e.target.value, 'email') })
 }
+
+const checkReg1 = (val, name) => {
+    const reg1 = new RegExp(
+        /^[^1-9²&~#"{}'()|\`^+=*,.?;:!§ù%¨$£¤µ<>°@_-]+$/gi
+    );
+    const result = reg1.test(val)
+    if (!result) {
+        const text = document.getElementById(`${name}ErrorMsg`)
+        text.textContent = "message d'erreur"
+        return false
+    }
+    document.getElementById(`${name}ErrorMsg`).textContent = ""
+    return true
+}
+
+const checkReg2 = (val, name) => {
+    const reg2 = new RegExp()
+    const result = reg1.test(val)
+    if (!result) {
+        const text = document.getElementById(`${name}ErrorMsg`)
+        text.textContent = "message d'erreur"
+        return false
+    }
+    document.getElementById(`${name}ErrorMsg`).textContent = ""
+    return true
+}
+
+
+const checkReg3 = (val, name) => {
+    const reg3 = new RegExp()
+    const result = reg1.test(val)
+    if (!result) {
+        const text = document.getElementById(`${name}ErrorMsg`)
+        text.textContent = "message d'erreur"
+        return false
+    }
+    document.getElementById(`${name}ErrorMsg`).textContent = ""
+    return true
+}
+
+
+
+
+
 
 const order = () => {
-    // verifie que tout les input du formulaire sont remplis 
-    // si un element manquant ou incorrecte, creer une alert
-    // sinon renvoi une confirmation de commande
+    e.preventDefault()
+    const firstName = document.getElementById('firstName').value
+    const lastName = document.getElementById('lastName').value
+    const city = document.getElementById('city').value
+    const adress = document.getElementById('adress').value
+    const email = document.getElementById('email').value
+    if (!checkReg1(firstName, "firstName") || !checkReg1(lastName, "lastName") || !checkReg1(city, "city") || !checkReg2(adress, "adress") || !checkReg3(email, "email")) {
+        alert("il y a une erreur dans le formulaire")
+        return false
+    }
+    let contact = { firstName, lastName, city, adress, email }
+    console.log(contact)
 }
 
-
-
-// if (id à ajouter = id dans le panier && couleur a ajouté = couleur dans le panier){
-//     quantité panier = quantité a ajouter + quantité panier
-// } else (id a ajouter != id dans le panier){
-//     creer nouvel element avec son image, son prix et sa couleur
-// }
+// finir checkReg2 et checkReg3*
+// order()
