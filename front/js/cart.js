@@ -250,7 +250,7 @@ const checkReg1 = (val, name) => {
 
 const checkReg2 = (val, name) => {
     const reg2 = new RegExp()
-    const result = reg1.test(val)
+    const result = reg2.test(val)
     if (!result) {
         const text = document.getElementById(`${name}ErrorMsg`)
         text.textContent = "message d'erreur"
@@ -262,8 +262,8 @@ const checkReg2 = (val, name) => {
 
 
 const checkReg3 = (val, name) => {
-    const reg3 = new RegExp()
-    const result = reg1.test(val)
+    const reg3 = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)
+    const result = reg3.test(val)
     if (!result) {
         const text = document.getElementById(`${name}ErrorMsg`)
         text.textContent = "message d'erreur"
