@@ -286,12 +286,21 @@ const order = () => {
     if (!checkReg1(firstName, "firstName") || !checkReg1(lastName, "lastName") || !checkReg1(city, "city") || !checkReg2(adress, "adress") || !checkReg3(email, "email")) {
         alert("il y a une erreur dans le formulaire")
         return false
+    } else {
+        let contact = { firstName, lastName, city, adress, email }
+        console.log(contact)
+
     }
-    let contact = { firstName, lastName, city, adress, email }
-    console.log(contact)
 }
 
 
 
+
+
+const postFetch = fetch("http://localhost:3000/api/products/", {
+    method: "POST",
+    body: JSON.stringify(),
+    headers: {},
+});
 
 // order()
