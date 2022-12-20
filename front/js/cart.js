@@ -235,13 +235,11 @@ const attachEvent = () => {
 }
 
 const checkReg1 = (val, name) => {
-    const reg1 = new RegExp(
-        /^[^1-9²&~#"{}'()|\`^+=*,.?;:!§ù%¨$£¤µ<>°@_-]+$/gi
-    );
+    const reg1 = new RegExp(/^[^1-9²&~#"{}'()|\`^+=*,.?;:!§ù%¨$£¤µ<>°@_-]+$/gi)
     const result = reg1.test(val)
     if (!result) {
         const text = document.getElementById(`${name}ErrorMsg`)
-        text.textContent = "message d'erreur"
+        text.textContent = "Veuillez entrer un champ valide"
         return false
     }
     document.getElementById(`${name}ErrorMsg`).textContent = ""
@@ -249,11 +247,11 @@ const checkReg1 = (val, name) => {
 }
 
 const checkReg2 = (val, name) => {
-    const reg2 = new RegExp()
+    const reg2 = new RegExp(/^[#.0-9a-zA-ZÀ-ÿ\s,-]{2,60}$/)
     const result = reg2.test(val)
     if (!result) {
         const text = document.getElementById(`${name}ErrorMsg`)
-        text.textContent = "message d'erreur"
+        text.textContent = "Veuillez entrer un champ valide"
         return false
     }
     document.getElementById(`${name}ErrorMsg`).textContent = ""
@@ -262,11 +260,11 @@ const checkReg2 = (val, name) => {
 
 
 const checkReg3 = (val, name) => {
-    const reg3 = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g)
+    const reg3 = new RegExp(/^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/)
     const result = reg3.test(val)
     if (!result) {
         const text = document.getElementById(`${name}ErrorMsg`)
-        text.textContent = "message d'erreur"
+        text.textContent = "Veuillez entrer un champ valide"
         return false
     }
     document.getElementById(`${name}ErrorMsg`).textContent = ""
@@ -293,5 +291,7 @@ const order = () => {
     console.log(contact)
 }
 
-// finir checkReg2 et checkReg3*
+
+
+
 // order()
