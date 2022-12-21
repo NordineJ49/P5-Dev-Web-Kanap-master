@@ -260,7 +260,7 @@ const checkReg2 = (val, name) => {
 
 
 const checkReg3 = (val, name) => {
-    const reg3 = new RegExp(/^\w=([\.-]?\w=)*@\w=([\.-]?\w=)*(\.\w{2,3})=$/)
+    const reg3 = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
     const result = reg3.test(val)
     if (!result) {
         const text = document.getElementById(`${name}ErrorMsg`)
