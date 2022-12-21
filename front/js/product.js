@@ -19,6 +19,8 @@ const fetchData = async () => {
     }
 };
 
+fetchData()
+
 
 
 /**

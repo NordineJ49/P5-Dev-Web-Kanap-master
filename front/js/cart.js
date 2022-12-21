@@ -226,11 +226,11 @@ const updateCart = (cart) => {
 // récupérer le formulaire et envoyer le client sur une autre page lorsqu'il a validé son panier
 
 const attachEvent = () => {
-    document.getElementById('order').addEventListener("click", () => { order() })
+    document.getElementById('order').addEventListener("click", (e) => { order(e) })
     document.getElementById('firstName').addEventListener("change", (e) => { checkReg1(e.target.value, 'firstName') })
     document.getElementById('lastName').addEventListener("change", (e) => { checkReg1(e.target.value, 'lastName') })
     document.getElementById('city').addEventListener("change", (e) => { checkReg1(e.target.value, 'city') })
-    document.getElementById('adress').addEventListener("change", (e) => { checkReg2(e.target.value, 'adress') })
+    document.getElementById('address').addEventListener("change", (e) => { checkReg2(e.target.value, 'address') })
     document.getElementById('email').addEventListener("change", (e) => { checkReg3(e.target.value, 'email') })
 }
 
@@ -276,41 +276,64 @@ const checkReg3 = (val, name) => {
 
 
 
-const order = () => {
+const order = (e) => {
     e.preventDefault()
     const firstName = document.getElementById('firstName').value
     const lastName = document.getElementById('lastName').value
     const city = document.getElementById('city').value
-    const adress = document.getElementById('adress').value
+    const address = document.getElementById('address').value
     const email = document.getElementById('email').value
     // si une de ces constantes n'est pas valide alors il y a une alert et on retourne false
-    if (!checkReg1(firstName, "firstName") || !checkReg1(lastName, "lastName") || !checkReg1(city, "city") || !checkReg2(adress, "adress") || !checkReg3(email, "email")) {
+    if (!checkReg1(firstName, "firstName") || !checkReg1(lastName, "lastName") || !checkReg1(city, "city") || !checkReg2(address, "address") || !checkReg3(email, "email")) {
         alert("il y a une erreur dans le formulaire")
         return false
     }
-    else {
-        let contact = { firstName, lastName, city, adress, email }
-        console.log(contact)
-        sendOrder()
+    let contact = { firstName, lastName, city, address, email }
+    console.log(contact)
+    const products = getProd()
+    console.log(products)
+    const data = { contact, products }
+    sendOrder(data)
+}
+
+/**
+ * Fonction qui recupère l'id des produits du localStorage
+ * @returns 
+*/
+const getProd = () => {
+    const prods = JSON.parse(localStorage.getItem('panier'))
+    let products = []
+    for (let elem of prods) {
+        products.push(elem.id)
+    }
+    return products
+}
+
+
+/**
+ * Fonction qui envoi la commande (order) au back avec la data (contact client + les produits grâce à leur id)
+ * @param {*} data 
+ */
+const sendOrder = async (data) => {
+    const options = {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+    };
+    try {
+        const postFetch = await fetch("http://localhost:3000/api/products/order", options)
+        if (!postFetch.ok) {
+            throw new Error(`Une erreur s'est produite: ${postFetch.status}`)
+        }
+        const order = await postFetch.json()
+        console.log(order.orderId)
+
+        // localStorage.clear()
+        document.location.href = `confirmation.html?orderId=${order.orderId}`
+    } catch (error) {
+        alert(error)
     }
 }
-
-// fonction qui envoi la commande au back (push + fetch ?)
-const sendOrder = () => {
-
-}
-
-
-
-let product = []
-product.push()
-
-
-
-const postFetch = fetch("http://localhost:3000/api/products/", {
-    method: "POST",
-    body: JSON.stringify(),
-    headers: {},
-});
-
-// order()
