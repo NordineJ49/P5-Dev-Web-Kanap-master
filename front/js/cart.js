@@ -260,7 +260,7 @@ const checkReg2 = (val, name) => {
 
 
 const checkReg3 = (val, name) => {
-    const reg3 = new RegExp(/^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$/)
+    const reg3 = new RegExp(/^\w=([\.-]?\w=)*@\w=([\.-]?\w=)*(\.\w{2,3})=$/)
     const result = reg3.test(val)
     if (!result) {
         const text = document.getElementById(`${name}ErrorMsg`)
@@ -289,13 +289,18 @@ const order = () => {
     } else {
         let contact = { firstName, lastName, city, adress, email }
         console.log(contact)
-
+        sendOrder()
     }
 }
 
 
+const sendOrder = () => {
+
+}
 
 
+let product = []
+product.push()
 
 const postFetch = fetch("http://localhost:3000/api/products/", {
     method: "POST",
