@@ -283,24 +283,29 @@ const order = () => {
     const city = document.getElementById('city').value
     const adress = document.getElementById('adress').value
     const email = document.getElementById('email').value
+    // si une de ces constantes n'est pas valide alors il y a une alert et on retourne false
     if (!checkReg1(firstName, "firstName") || !checkReg1(lastName, "lastName") || !checkReg1(city, "city") || !checkReg2(adress, "adress") || !checkReg3(email, "email")) {
         alert("il y a une erreur dans le formulaire")
         return false
-    } else {
+    }
+    else {
         let contact = { firstName, lastName, city, adress, email }
         console.log(contact)
         sendOrder()
     }
 }
 
-
+// fonction qui envoi la commande au back (push + fetch ?)
 const sendOrder = () => {
 
 }
 
 
+
 let product = []
 product.push()
+
+
 
 const postFetch = fetch("http://localhost:3000/api/products/", {
     method: "POST",
