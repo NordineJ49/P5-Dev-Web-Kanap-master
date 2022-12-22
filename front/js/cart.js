@@ -330,8 +330,8 @@ const sendOrder = async (data) => {
         }
         const order = await postFetch.json()
         console.log(order.orderId)
-
-        // localStorage.clear()
+        //localStorage.removeItem(key) qui permet d'enlever la clé souhaitée dans le localStorage
+        localStorage.removeItem('panier')
         document.location.href = `confirmation.html?orderId=${order.orderId}`
     } catch (error) {
         alert(error)
