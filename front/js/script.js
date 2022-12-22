@@ -36,7 +36,7 @@ const displayData = (products) => {
         // creation element DOM + attribution de la data spécifique a chaque element
         let id = product._id
         const aHref = document.createElement('a');
-        aHref.href = "./product.html?id=" + id
+        aHref.href = `./product.html?id=${id}`
 
 
         const article = document.createElement('article');

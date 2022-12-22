@@ -76,7 +76,7 @@ const displayProduct = (data, cart) => {
 
     // prix du produit 
     const paragraph2 = document.createElement('p')
-    paragraph2.textContent = data.price + " €"
+    paragraph2.textContent = `${data.price} €`
     div3.appendChild(paragraph2)
     // ferme div 3
 
