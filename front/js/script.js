@@ -1,9 +1,3 @@
-// Récupérer les données 
-// Verifier les données 
-// Boucle sur les données 
-// A chaque tour de boucle on appel display data
-// Création des éléments HTML et injection dans le DOM
-
 
 
 
@@ -25,7 +19,7 @@ const fetchData = async () => {
 }
 
 /**
- * itere le tableau et créer les elements (html)
+ * Créer les éléments du DOM et insère les données récupérées dans le fetch
  * @param {Array} products 
  */
 const displayData = (products) => {
@@ -62,7 +56,7 @@ const displayData = (products) => {
 }
 
 /**
- * Insère les elements dans le DOM
+ * Insère les éléments du DOM que l'ont vient de créer en les emboitants dans l'ordre correct
  * @param {Object} aHref 
  * @param {Object} article 
  * @param {Object} image 

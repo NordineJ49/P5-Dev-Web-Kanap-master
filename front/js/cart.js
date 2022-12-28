@@ -1,9 +1,9 @@
-// chapter 1 
-// affichage du panier 
-// voir ce qu'il y a dans le localStorage
 
 
-// recupérer le panier
+/**
+ * Récuperation du panier dans le localStorage
+ * 
+ */
 const getCart = async () => {
     let cart = []
     let panier = JSON.parse(localStorage.getItem('panier'))
@@ -30,12 +30,19 @@ const getCart = async () => {
     updateCart(cart)
     attachEvent()
 }
+
+
 // 
 window.onload = () => {
     getCart()
 }
 
 
+/**
+ * Création des éléments du DOM et attribution de la data
+ * @param {*} data 
+ * @param {*} cart 
+ */
 const displayProduct = (data, cart) => {
     const section = document.querySelector("#cart__items");
 
@@ -142,8 +149,11 @@ const displayProduct = (data, cart) => {
 
 
 
-// creer trois fonction
-// -modifier la quantité du produit (mettre a j la qty et prix total)
+/**
+ * Fonction qui met a jour la quantité d'un produit si deja dans le panier
+ * @param {*} cart 
+ * @param {*} e 
+ */
 const changeProdQty = (cart, e) => {
     console.log(e)
     // recuperer local storage
@@ -205,7 +215,10 @@ const deleteProd = (cart, e) => {
     ancestor.remove()
 }
 
-// -fonction qui met a j la qty et prix total
+/**
+ * Fonction qui met à jour la quantité et le prix total dans le panier 
+ * @param {*} cart 
+ */
 const updateCart = (cart) => {
     console.log(cart)
     let totPrice = 0
@@ -220,11 +233,14 @@ const updateCart = (cart) => {
 
 
 
-// chapter 2
 // controle et recuperation du formulaire
 // verifier que tout les champs du formulaire sont remplis
 // récupérer le formulaire et envoyer le client sur une autre page lorsqu'il a validé son panier
 
+
+/**
+ * Ecouteur d'évenement au bouton "commander" et également à tout les inputs du formulaire
+ */
 const attachEvent = () => {
     document.getElementById('order').addEventListener("click", (e) => { order(e) })
     document.getElementById('firstName').addEventListener("change", (e) => { checkReg1(e.target.value, 'firstName') })
@@ -234,6 +250,13 @@ const attachEvent = () => {
     document.getElementById('email').addEventListener("change", (e) => { checkReg3(e.target.value, 'email') })
 }
 
+
+/**
+ * RegEx pour nom prenom et ville
+ * @param {*} val 
+ * @param {*} name 
+ * @returns 
+ */
 const checkReg1 = (val, name) => {
     const reg1 = new RegExp(/^[^1-9²&~#"{}'()|\`^+=*,.?;:!§ù%¨$£¤µ<>°@_-]+$/gi)
     const result = reg1.test(val)
@@ -246,6 +269,13 @@ const checkReg1 = (val, name) => {
     return true
 }
 
+
+/**
+ * RegEx pour adresse
+ * @param {*} val 
+ * @param {*} name 
+ * @returns 
+ */
 const checkReg2 = (val, name) => {
     const reg2 = new RegExp(/^[#.0-9a-zA-ZÀ-ÿ\s,-]{2,60}$/)
     const result = reg2.test(val)
@@ -259,6 +289,12 @@ const checkReg2 = (val, name) => {
 }
 
 
+/**
+ * RegEx pour adresse
+ * @param {*} val 
+ * @param {*} name 
+ * @returns 
+ */
 const checkReg3 = (val, name) => {
     const reg3 = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
     const result = reg3.test(val)
@@ -275,7 +311,10 @@ const checkReg3 = (val, name) => {
 
 
 
-
+/**
+ * Fonction order qui vérifie que tout les inputs du formulaire sont correct et appel la fonction sendOrder()
+ * 
+ */
 const order = (e) => {
     e.preventDefault()
     const firstName = document.getElementById('firstName').value

@@ -1,6 +1,6 @@
 
 
-// fonction fetch + récupération de l'ID
+// fonction fetch qui récupére la data JSON + l'ID du produit et l'insère dans l'url
 const fetchData = async () => {
     const newId = new URLSearchParams(window.location.search).get("id");
     console.log(newId)
@@ -72,7 +72,7 @@ const attachEvent = (prodID) => {
 
 
 /**
- * 
+ * Fonction qui va vérifier si la couleur et la quantité sont correct avant d'enregistrer le panier dans le localStorage sinon retourne false
  * @param {string} prodID 
  * @returns false
  */
@@ -115,7 +115,7 @@ const addCart = (prodID) => {
 
 
 /**
- * vérifie que la valeur n'est pas vide 
+ * vérifie que la valeur de la couleur à été séléctionnée sinon retourne une alerte
  * @returns
  */
 const checkColor = () => {
@@ -131,7 +131,7 @@ const checkColor = () => {
 }
 
 /**
- * vérifie la validité de la quantité 
+ * vérifie que la quantité à été séléctionnée sinon retourne une alerte 
  * @returns 
  */
 const checkQuantity = () => {
