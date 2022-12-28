@@ -1,5 +1,3 @@
-
-
 /**
  * Récuperation du panier dans le localStorage
  * 
@@ -29,12 +27,6 @@ const getCart = async () => {
     }
     updateCart(cart)
     attachEvent()
-}
-
-
-// 
-window.onload = () => {
-    getCart()
 }
 
 
@@ -155,8 +147,14 @@ const displayProduct = (data, cart) => {
  * @param {*} e 
  */
 const changeProdQty = (cart, e) => {
-    console.log(e)
-    // recuperer local storage
+    console.log(e.target.defaultValue)
+    const defValue = e.target.defaultValue
+    // Si la valeur à été modifiée et est inferieur a 1 et sup a 100 on retourne la valeur par défaut (valeur précédente)
+    if (e.target.value < 1 || e.target.value > 100) {
+        e.target.value = defValue
+        alert("La quantité saisie n'a pas été prise en compte")
+        return
+    }
     const elt = e.target;
     const ancestor = elt.closest("article");
     const ancestorId = ancestor.id
@@ -208,8 +206,12 @@ const deleteProd = (cart, e) => {
     //     cartItems.splice(index, 1)
     //     cart.splice(index, 1) 
     // }
-
-    localStorage.setItem('panier', JSON.stringify(cartItems))
+    if (cartItems.length === 0) {
+        localStorage.removeItem('panier')
+        alert("Votre panier est vide !")
+    } else {
+        localStorage.setItem('panier', JSON.stringify(cartItems))
+    }
     updateCart(cart)
     console.log(ancestor)
     ancestor.remove()
@@ -376,3 +378,6 @@ const sendOrder = async (data) => {
         alert(error)
     }
 }
+
+
+getCart()

@@ -23,14 +23,12 @@ const fetchData = async () => {
  * @param {Array} products 
  */
 const displayData = (products) => {
-    // boucle FOR OF pour parcourir un objet iterable et qui donne des instructions pour la valeur de chaque propriété
+    // boucle FOR OF pour parcourir le tableau des produits qui pour chaque itération récupère un objet
     for (const product of products) {
 
-
         // creation element DOM + attribution de la data spécifique a chaque element
-        let id = product._id
         const aHref = document.createElement('a');
-        aHref.href = `./product.html?id=${id}`
+        aHref.setAttribute("href", `./product.html?id=${product._id}`)
 
 
         const article = document.createElement('article');
@@ -43,13 +41,12 @@ const displayData = (products) => {
 
         const title = document.createElement('h3');
         title.setAttribute('class', "productName");
-        title.innerText = product.name
-        console.log(typeof (title))
+        title.textContent = product.name
 
 
         const paragraph = document.createElement('p');
         paragraph.setAttribute('class', "productDescription");
-        paragraph.innerText = product.description
+        paragraph.textContent = product.description
 
         insertTagElem(aHref, article, image, title, paragraph)
     }

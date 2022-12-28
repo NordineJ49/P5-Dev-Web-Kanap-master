@@ -1,16 +1,18 @@
 
 
-// fonction fetch qui récupére la data JSON + l'ID du produit et l'insère dans l'url
+// récuperer l'ID dans l'url de la page, puis on le concatene avec l'url du back (renvoi un seul produit) 
 const fetchData = async () => {
     const newId = new URLSearchParams(window.location.search).get("id");
     console.log(newId)
     try {
         const url = (`http://localhost:3000/api/products/${newId}`)
+        // promesse
         const response = await fetch(url)
         console.log(response)
         if (!response.ok) {
             throw new Error(`Error ${response.status}`)
         }
+        // promesse résolu et on parse le resultat en json
         const data = await response.json();
         console.log(data)
         displayProduct(data);
@@ -19,12 +21,12 @@ const fetchData = async () => {
     }
 };
 
-fetchData()
+
 
 
 
 /**
- * Itère le tableau et créer les éléments
+ * Créer les éléments du DOM du produit
  * @param {Object} product
  */
 const displayProduct = (product) => {
@@ -44,10 +46,12 @@ const displayProduct = (product) => {
 
     let colors = product.colors
     let colorSelect = document.getElementById('colors')
+    // itération sur le tableau colors, pour chaque itération je créer une option avec la valeur et la couleur
     for (let index in colors) {
         let opt = document.createElement('option')
         opt.textContent = colors[index]
         opt.value = colors[index]
+        // j'apporte l'option au sélécteur
         colorSelect.append(opt)
     }
     insertTagElem(image)
@@ -65,14 +69,17 @@ const insertTagElem = (image) => {
     }
 }
 
-
+/**
+ * Fonction qui attache un écouteur d'évènement (evenement "click") sur le bouton "ajouter au panier"
+ * @param {String} prodID 
+ */
 const attachEvent = (prodID) => {
     document.getElementById('addToCart').addEventListener("click", () => { addCart(prodID) })
 }
 
 
 /**
- * Fonction qui va vérifier si la couleur et la quantité sont correct avant d'enregistrer le panier dans le localStorage sinon retourne false
+ * Fonction qui enregistre les produits dans le panier (panier stocker dans le localStorage)
  * @param {string} prodID 
  * @returns false
  */
@@ -88,27 +95,31 @@ const addCart = (prodID) => {
             qty: selectQuantity,
         }
         let basket;
-        // -verifier que le localstorage est vide et push prod
+        // si pas d'item panier dans le localStorage
         if (!localStorage.getItem('panier')) {
             // ajouter prod a panier
             basket = []
+            // on pousse l'objet 'prod' dans le tableau 'basket'
             basket.push(prod)
-            // si localstorage pas vide
         } else {
             // recuperer le localstorage (JSON.parse)
             basket = JSON.parse(localStorage.getItem('panier'))
-            // Verifier le couple (id + color) si c'est le meme, je modifie la quantité
+            // Cherche le groupe (id + color) dans 'basket'
             const result = basket.find((elt) => elt.id === prodID && elt.col === selectColor)
             console.log(result)
+            // si result, je modifie la quantité
             if (result) {
+                // parseInt pour caster les variables pour etre sur que c'est un integer (nombre entier) (parseFloat = nombre a virgule)
                 const newQuantity = parseInt(result.qty) + parseInt(prod.qty)
                 result.qty = newQuantity
             } else {
+                // si !result on pousse l'objet 'prod' dans le tableau 'basket'
                 basket.push(prod)
             }
         }
         // on remet le panier dans le localstorage (JSON.stringify)
         localStorage.setItem('panier', JSON.stringify(basket))
+        alert("Le produit à été ajouté au panier.")
     }
     return false
 }
@@ -145,3 +156,5 @@ const checkQuantity = () => {
     // sinon retourner valeur
     return valeur
 }
+
+fetchData()
