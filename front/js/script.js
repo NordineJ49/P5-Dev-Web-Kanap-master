@@ -1,32 +1,40 @@
 
 
 
-// fonction fetch pour récupérer la data json
+// fonction asynchrone pour récupérer la data json grâce à l'API fetch
 const fetchData = async () => {
+    // bloc try
     try {
+        // url du serveur à contacter
         const url = "http://localhost:3000/api/products";
+        // opérateur await qui met en pause la fonction async jusqu'à que la promesse soit obtenu 
         const response = await fetch(url);
         console.log(response)
+        // si pas de reponse du serveur, une erreur est envoyée
         if (!response.ok) {
             throw new Error(`Error ${response.status}`)
         }
+        // sinon la réponse est convertie au format JSON
         const data = await response.json();
         console.log(data)
+        // appel de la fonction displayData()
         displayData(data);
-    } catch (error) {
+    }
+    // bloc catch : si une erreur est détécté on sort du bloc try et une alerte est envoyée
+    catch (error) {
         alert(error)
     }
 }
 
 /**
- * Créer les éléments du DOM et insère les données récupérées dans le fetch
+ * Créer les éléments du DOM et y insère les données récupérées dans le fetch
  * @param {Array} products 
  */
 const displayData = (products) => {
-    // boucle FOR OF pour parcourir le tableau des produits qui pour chaque itération récupère un objet
+    // boucle FOR OF qui parcours le tableau des produits et qui pour chaque tour de boucle (itération) récupère un objet
     for (const product of products) {
 
-        // creation element DOM + attribution de la data spécifique a chaque element
+        // creation élément DOM et de leurs attributs avec les données récupérée 
         const aHref = document.createElement('a');
         aHref.setAttribute("href", `./product.html?id=${product._id}`)
 
@@ -48,12 +56,13 @@ const displayData = (products) => {
         paragraph.setAttribute('class', "productDescription");
         paragraph.textContent = product.description
 
+        // La fonction insertTagElem() est appelé avec comme argument les éléments crées
         insertTagElem(aHref, article, image, title, paragraph)
     }
 }
 
 /**
- * Insère les éléments du DOM que l'ont vient de créer en les emboitants dans l'ordre correct
+ * Insère les éléments du DOM créer en les emboitants dans l'ordre correct
  * @param {Object} aHref 
  * @param {Object} article 
  * @param {Object} image 
@@ -61,7 +70,9 @@ const displayData = (products) => {
  * @param {Object} p 
  */
 const insertTagElem = (aHref, article, image, h3, p) => {
-    const items = document.querySelector("#items");
+    // récupération de la balise qui a pour id "items"
+    const items = document.getElementById("items");
+    // si la balise de la const items, est vide les balises créées plus tôt y sont insérées
     if (items != null) {
         items.appendChild(aHref);
         aHref.appendChild(article);
@@ -71,4 +82,5 @@ const insertTagElem = (aHref, article, image, h3, p) => {
     }
 }
 
+// appel de la fonction fetchData()
 fetchData()
