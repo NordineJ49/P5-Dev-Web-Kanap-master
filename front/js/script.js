@@ -14,7 +14,7 @@ const fetchData = async () => {
         if (!response.ok) {
             throw new Error(`Error ${response.status}`)
         }
-        // sinon la réponse est convertie au format JSON
+        // une fois la promesse résolue le resultat est parser en json
         const data = await response.json();
         console.log(data)
         // appel de la fonction displayData()
@@ -30,6 +30,7 @@ const fetchData = async () => {
  * Créer les éléments du DOM et y insère les données récupérées dans le fetch
  * @param {Array} products 
  */
+// -------------------------------------- comment sait on que products represente touts les produits ? quel variable ? -------------------------------------------------
 const displayData = (products) => {
     // boucle FOR OF qui parcours le tableau des produits et qui pour chaque tour de boucle (itération) récupère un objet
     for (const product of products) {
