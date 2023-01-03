@@ -182,7 +182,7 @@ const checkQuantity = () => {
     const valeurQuantité = document.getElementById('quantity')
     const valeur = valeurQuantité.value
     if (!valeur || valeur <= 0 || valeur >= 101) {
-        alert("Vous devez séléctionner une quantité comprise entre 1 et 100 inclus")
+        alert("Vous devez séléctionner une quantitée comprise entre 1 et 100 inclus")
         return false
     }
     // sinon retourner valeur

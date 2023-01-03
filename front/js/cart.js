@@ -241,7 +241,7 @@ const updateCart = (cart) => {
 
 
 /**
- * Ecouteur d'évenement au bouton "commander" et également à tout les inputs du formulaire
+ * Ecouteur d'évenement au bouton "commander" et à tout les inputs du formulaire
  */
 const attachEvent = () => {
     document.getElementById('order').addEventListener("click", (e) => { order(e) })
@@ -342,9 +342,13 @@ const order = (e) => {
  * @returns 
 */
 const getProd = () => {
+    // Récupération de l'item panier dans le localStorage
     const prods = JSON.parse(localStorage.getItem('panier'))
+    // creation du tableau products
     let products = []
+    // tour de boucle pour récupérer chaques elements de prods
     for (let elem of prods) {
+        // Récupération de l'id des elem de prods, puis envoyés dans le tableau products
         products.push(elem.id)
     }
     return products
