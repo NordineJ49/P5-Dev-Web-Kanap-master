@@ -3,27 +3,37 @@
  * 
  */
 const getCart = async () => {
+    // creation d'un tableau cart
     let cart = []
+    // si pas  d'item panier dans le localStorage
     if (!localStorage.getItem('panier')) {
         alert("votre panier est vide")
         return false
     }
+    // si panier, le panier est récupérer du localStorage avec un json.parse
     let panier = JSON.parse(localStorage.getItem('panier'))
+    // tour de boucle sur chaque item du panier
     for (let item of panier) {
+        // on récupere l'id de l'item
         let itemId = item.id
-        // console.log(itemId)
         try {
+            // concaténation de l'item id dans l'url 
             const url = (`http://localhost:3000/api/products/${itemId}`)
+            // attente que la promesse soit résolu
             const response = await fetch(url)
-            // console.log(response)
+            // si reponse non ok, envoi erreur + le status de l'erreur 
             if (!response.ok) {
                 throw new Error(`Error ${response.status}`)
             }
+            // une fois la promesse résolue, methode json pour convertir la réponse en objet json
             const data = await response.json();
+            console.log(data)
+            // la couleur et la quantité de l'objet data sont défini par la couleur et la quantité de l'item
             data.qty = item.qty
             data.col = item.col
-            console.log(data)
+            // data est push dans le tableau cart
             cart.push(data)
+            // appel de la fonction displayProduct avec comme pour argument (data et cart)
             displayProduct(data, cart)
         } catch (error) {
             alert(error)
@@ -132,19 +142,6 @@ const displayProduct = (data, cart) => {
 
 
 
-
-
-// faire une boucle sur le panier pour récuperer l'identifiant et faire un fetch au back pour recuperer les données manquante (prix ...)
-// ------boucle for pour recupérer id du produit dans le panier
-// ------fetch au back pour récuperer le prix et l'image du produit dont on viens d'obtenir l'identifiant
-
-// afficher image nom et le localstorage (la couleur du produit et la quantité)
-// ------afficher le resultat du fetch fait precedemment et la couleur/qty enregistré dans le localStorage
-
-
-
-
-
 /**
  * Fonction qui met a jour la quantité d'un produit si deja dans le panier
  * @param {*} cart 
@@ -152,24 +149,35 @@ const displayProduct = (data, cart) => {
  */
 const changeProdQty = (cart, e) => {
     console.log(e.target.defaultValue)
+    //const defValue qui contient la valeur par defaut de l'element cible de l'évenement (valeur présente avant que l'utilisateur ne la modifie)
     const defValue = e.target.defaultValue
-    // Si la valeur à été modifiée et est inferieur a 1 et sup a 100 on retourne la valeur par défaut (valeur précédente)
+    // Si la valeur à été modifiée et est inferieur a 1 et sup a 100
     if (e.target.value < 1 || e.target.value > 100) {
+        // on retourne la valeur par défaut (valeur précédente) + alert
         e.target.value = defValue
         alert("La quantité saisie n'a pas été prise en compte")
         return
     }
+    // const elt qui contient l'element cible de l'evenement
     const elt = e.target;
+    // const ancestor qui est l'element parent 'article' le plus proche de elt
     const ancestor = elt.closest("article");
+    // on recupére l'id de ancestor
     const ancestorId = ancestor.id
+    // on recupere l'attribut data-color de ancestor
     const ancestorCol = ancestor.getAttribute('data-color')
+    // l'item panier va etre parser sous forme d'objet javascript et etre contenu dans cartItems
     let cartItems = JSON.parse(localStorage.getItem('panier'))
+    // boucle forEach sur cartItems qui pour chaque tour de boucle va parcourir les elements tableau
     cartItems.forEach((elem, index) => {
+        // si elem id ET couleur identique l'id et la couleur de ancestor
         if (elem.id === ancestorId && elem.col === ancestorCol) {
+            // la valeur de l'élément cible de l'événement est affecté a l'attribut qty du tableau à l'index en cours,
             cartItems[index].qty = e.target.value
             cart[index].qty = e.target.value
         }
     })
+    // sinon l'item panier et converti en chaine de caractere avec json.stringify et remis dans le localStorage
     localStorage.setItem('panier', JSON.stringify(cartItems))
     updateCart(cart)
 }
@@ -182,42 +190,37 @@ const changeProdQty = (cart, e) => {
  * @param {event} e 
  */
 const deleteProd = (cart, e) => {
+    // const elt qui contient l'élément cible de l'événement
     const elt = e.target;
+    // const ancestor qui est l'element parent 'article' le plus proche de elt
     const ancestor = elt.closest("article");
+    // on recupére l'id de ancestor
     const ancestorId = ancestor.id
+    // on recupere l'attribut data-color de ancestor
     const ancestorCol = ancestor.getAttribute('data-color')
-    // recuperer array 'panier' dans le localstorage avec tout les objets a l'interieur
+    // l'item panier va etre parser sous forme d'objet javascript et etre contenu dans let cartItems
     let cartItems = JSON.parse(localStorage.getItem('panier'))
-
-    // for (let index in cartItems) {
-    //     let idProduct = cartItems[index].id
-    //     let colProduct = cartItems[index].col
-    //     if (ancestorId === idProduct && ancestorCol === colProduct) {
-    //         cartItems.splice(index, 1)
-    //         cart.splice(index, 1)
-    //     }
-    // } 
-
+    // boucle forEach sur cartItems qui pour chaque tour de boucle va parcourir les elements tableau
     cartItems.forEach((elem, index) => {
+        // si id ET la couleur de l'element est identique a l'id et la couleur de ancestor
         if (elem.id === ancestorId && elem.col === ancestorCol) {
+            // on supprime l'element du tableau cartItems et cart a l'index en cours
             cartItems.splice(index, 1)
             cart.splice(index, 1)
         }
     });
-
-    // const index = cartItems.findIndex(elem => elem.id === ancestorId && elem.col === ancestorCol)
-    // if (index != -1) {
-    //     cartItems.splice(index, 1)
-    //     cart.splice(index, 1) 
-    // }
+    // si le tableau cartItems est vide (apres avoir supprimé le seul elem du tableau)
     if (cartItems.length === 0) {
+        // on supprime directement l'item panier du localStorage
         localStorage.removeItem('panier')
         alert("Votre panier est vide !")
-    } else {
+    }
+    // sinon l'item panier et converti en chaine de caractere avec json.stringify et remis dans le localStorage
+    else {
         localStorage.setItem('panier', JSON.stringify(cartItems))
     }
     updateCart(cart)
-    console.log(ancestor)
+    // ancestor est supprimé 
     ancestor.remove()
 }
 
