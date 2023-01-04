@@ -4,7 +4,7 @@
 
 // récuperer l'ID dans l'url de la page et le concatene avec l'url du back (pour renvoyer un seul produit) 
 const fetchData = async () => {
-    // methode URLSearchParams.get() retourne la premiere valeur associée au parametre "id"
+    // methode URLSearchParams.get() retourne la valeur associée au parametre "id"
     const newId = new URLSearchParams(window.location.search).get("id");
     console.log(newId)
     // bloc try
@@ -34,14 +34,11 @@ const fetchData = async () => {
 
 
 
-
 /**
  * Créer ou modifier les éléments du DOM sur la page d'un produit
  * @param {Object} product
  */
 const displayProduct = (product) => {
-
-    console.log(typeof (product))
     //création éléments DOM et attribution de la data spécifique à chaque élément
     document.getElementById('title').textContent = product.name
 
@@ -81,11 +78,8 @@ const displayProduct = (product) => {
 const insertTagElem = (image) => {
     // récuperation de la balise ayant comme nom de class="item__img"
     const item = document.querySelector('.item__img')
-    // si contenu de la balise vide
-    if (item != null) {
-        // insertion de l'image dans la balise
-        item.appendChild(image)
-    }
+    // insertion de l'image dans la balise
+    item.appendChild(image)
 }
 
 /**
@@ -107,12 +101,11 @@ const addCart = (prodID) => {
     // la quantité et la couleur sont vérifié grâce aux fonction checkColor() et checkQuantity()
     const selectColor = checkColor()
     const selectQuantity = checkQuantity()
-    // si couleur et quantité OK
-    // ---------------------------------------------- revoir if else ---------------------------------------------------------
+
+    // si selectColor OU selectQuantity a renvoyer false on ne rentre pas dans le if 
     if (selectColor && selectQuantity) {
         // création d'un objet avec les propriétés id, col(couleur) et qty(quantité)
         const prod = {
-            // -------------------------------------- comment sait on que prodID est l'id du produit ? quel variable ? -------------------------------------------------
             id: prodID,
             col: selectColor,
             qty: selectQuantity,
@@ -131,7 +124,6 @@ const addCart = (prodID) => {
             // recuperer le localstorage (JSON.parse) dans le tableau basket
             basket = JSON.parse(localStorage.getItem('panier'))
             // l'id et la couleur des element présent dans le panier est similaire au produit que l'on veut ajouter
-            // ------------------------------------- elt s'appel elt de base ? ------------------------------------------------
             const result = basket.find((elt) => elt.id === prodID && elt.col === selectColor)
             console.log(result)
             // si result true, seul la quantité est modifiée
@@ -150,8 +142,6 @@ const addCart = (prodID) => {
         // on remet basket dans l'item "panier" du localstorage (JSON.stringify)
         localStorage.setItem("panier", JSON.stringify(basket))
         alert("Le produit à été ajouté au panier.")
-
-
     }
     return false
 }
@@ -181,7 +171,7 @@ const checkQuantity = () => {
     // si valeur null alert ("vous devez selectionner une quantité entre 1 et 100") + return false
     const valeurQuantité = document.getElementById('quantity')
     const valeur = valeurQuantité.value
-    if (!valeur || valeur <= 0 || valeur >= 101) {
+    if (!valeur || valeur < 1 || valeur > 100) {
         alert("Vous devez séléctionner une quantitée comprise entre 1 et 100 inclus")
         return false
     }

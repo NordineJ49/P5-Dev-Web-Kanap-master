@@ -1,9 +1,8 @@
 
 
-
 // fonction asynchrone pour récupérer la data json grâce à l'API fetch
 const fetchData = async () => {
-    // bloc try
+    // bloc try 
     try {
         // url du serveur à contacter
         const url = "http://localhost:3000/api/products";
@@ -14,13 +13,13 @@ const fetchData = async () => {
         if (!response.ok) {
             throw new Error(`Error ${response.status}`)
         }
-        // une fois la promesse résolue le resultat est parser en json
+        // une fois la promesse résolue, methode json pour convertir la réponse en objet json
         const data = await response.json();
         console.log(data)
         // appel de la fonction displayData()
         displayData(data);
     }
-    // bloc catch : si une erreur est détécté on sort du bloc try et une alerte est envoyée
+    // bloc catch : si une erreur est détécté dans le bloc try on sort du bloc et le code du bloc catch est exécuté
     catch (error) {
         alert(error)
     }
@@ -30,7 +29,6 @@ const fetchData = async () => {
  * Créer les éléments du DOM et y insère les données récupérées dans le fetch
  * @param {Array} products 
  */
-// -------------------------------------- comment sait on que products represente touts les produits ? quel variable ? -------------------------------------------------
 const displayData = (products) => {
     // boucle FOR OF qui parcours le tableau des produits et qui pour chaque tour de boucle (itération) récupère un objet
     for (const product of products) {
@@ -73,14 +71,12 @@ const displayData = (products) => {
 const insertTagElem = (aHref, article, image, h3, p) => {
     // récupération de la balise qui a pour id "items"
     const items = document.getElementById("items");
-    // si la balise de la const items, est vide les balises créées plus tôt y sont insérées
-    if (items != null) {
-        items.appendChild(aHref);
-        aHref.appendChild(article);
-        article.appendChild(image);
-        article.appendChild(h3);
-        article.appendChild(p);
-    }
+    // 
+    article.appendChild(p);
+    article.appendChild(h3);
+    article.appendChild(image);
+    aHref.appendChild(article);
+    items.appendChild(aHref);
 }
 
 // appel de la fonction fetchData()

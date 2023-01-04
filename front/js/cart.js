@@ -4,6 +4,10 @@
  */
 const getCart = async () => {
     let cart = []
+    if (!localStorage.getItem('panier')) {
+        alert("votre panier est vide")
+        return false
+    }
     let panier = JSON.parse(localStorage.getItem('panier'))
     for (let item of panier) {
         let itemId = item.id
@@ -223,12 +227,18 @@ const deleteProd = (cart, e) => {
  */
 const updateCart = (cart) => {
     console.log(cart)
+    // on initialise deux variable à 0
     let totPrice = 0
     let totQty = 0
+    // methode forEach pour parcourir tout les elements de l'objet cart.
     cart.forEach(elem => {
+        // pour chaque element :
+        // le prix total est calculé en multipliant le prix de l'element multiplié par sa quantité. Ensuite on l'ajoute a totPrice
         totPrice += parseInt(elem.price) * parseInt(elem.qty)
+        // la quantité total est calculé en ajoutant la quantité de l'élément a totQty
         totQty += parseInt(elem.qty)
     })
+    // Récuperation de l'élément du DOM via son Id et prend comme contenu totQty et totPrice
     document.getElementById('totalQuantity').textContent = totQty
     document.getElementById('totalPrice').textContent = totPrice
 }
@@ -244,7 +254,9 @@ const updateCart = (cart) => {
  * Ecouteur d'évenement au bouton "commander" et à tout les inputs du formulaire
  */
 const attachEvent = () => {
+    // ecouteur d'évenement "click" sur l'élément ayant l'id 'order' (bouton "commander"). Lorsque l'utilisateur clique sur le bouton la fonction "order" est éxécutée
     document.getElementById('order').addEventListener("click", (e) => { order(e) })
+    // ecouteur d'évenement "change" sur l'élément ayant l'id 'firstName' (input prenom). Lorsque la valeur de cet élément est modifiée, la fonction "checkReg1" est éxécutée
     document.getElementById('firstName').addEventListener("change", (e) => { checkReg1(e.target.value, 'firstName') })
     document.getElementById('lastName').addEventListener("change", (e) => { checkReg1(e.target.value, 'lastName') })
     document.getElementById('city').addEventListener("change", (e) => { checkReg1(e.target.value, 'city') })
@@ -260,7 +272,8 @@ const attachEvent = () => {
  * @returns 
  */
 const checkReg1 = (val, name) => {
-    const reg1 = new RegExp(/^[^1-9²&~#"{}'()|\`^+=*,.?;:!§ù%¨$£¤µ<>°@_-]+$/gi)
+    // regex qui verifie que la chaine de caractere ne contient aucun des caracteres spécifiés entre crochet
+    const reg1 = new RegExp(/^[^1-9²&~#"{}'()|\`^+=*,.?;:!§ù%¨$£¤µ<>°@_-]+$/)
     const result = reg1.test(val)
     if (!result) {
         const text = document.getElementById(`${name}ErrorMsg`)
@@ -279,26 +292,31 @@ const checkReg1 = (val, name) => {
  * @returns 
  */
 const checkReg2 = (val, name) => {
-    const reg2 = new RegExp(/^[#.0-9a-zA-ZÀ-ÿ\s,-]{2,60}$/)
+    // ensemble des caractères acceptés dans le champ adresse 
+    const reg2 = new RegExp(/^[0-9]+\s[a-zA-Z\s]+[0-9\s]*$/)
+    // const result qui verifie si la val entrée dans l'input adresse est compatible avec reg2
     const result = reg2.test(val)
+    // si champ incorrect, on recupere la balise correspondante et un message d'erreur est envoyé + return false
     if (!result) {
         const text = document.getElementById(`${name}ErrorMsg`)
         text.textContent = "Veuillez entrer un champ valide"
         return false
     }
+    // sinon, on s'assure que la balise qui renvoi l'erreur est vide + return false
     document.getElementById(`${name}ErrorMsg`).textContent = ""
     return true
 }
 
 
 /**
- * RegEx pour adresse
+ * RegEx pour email
  * @param {*} val 
  * @param {*} name 
  * @returns 
  */
 const checkReg3 = (val, name) => {
     const reg3 = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)
+    // verifie si la val entrée dans l'input email est compatible avec reg3
     const result = reg3.test(val)
     if (!result) {
         const text = document.getElementById(`${name}ErrorMsg`)
@@ -318,22 +336,33 @@ const checkReg3 = (val, name) => {
  * 
  */
 const order = (e) => {
+    // l'action (envoi du formulaire) associée a l'evenement e est annulée pour éviter que la page soit rechargée lors de la soumission du formulaire
     e.preventDefault()
+    // Récuperation de la valeur ayant l'id 'firstName'
     const firstName = document.getElementById('firstName').value
     const lastName = document.getElementById('lastName').value
     const city = document.getElementById('city').value
     const address = document.getElementById('address').value
     const email = document.getElementById('email').value
-    // si une de ces constantes n'est pas valide alors il y a une alert et on retourne false
+    // vérifie si les valeurs du formulaire sont valides grâce aux fonctions "checkReg1", "checkReg2" et "checkReg3". 
     if (!checkReg1(firstName, "firstName") || !checkReg1(lastName, "lastName") || !checkReg1(city, "city") || !checkReg2(address, "address") || !checkReg3(email, "email")) {
+        // Si une des valeurs n'est pas valide, une alerte est affichée et la fonction retourne false.
         alert("il y a une erreur dans le formulaire")
         return false
     }
+    // si tout est valide, on créer l'objet contact avec les valeurs récupérées dans le formulaire
     let contact = { firstName, lastName, city, address, email }
     console.log(contact)
+    // la constante products appel la fonction getProd() et récupère tout les produits qui ont été ajoutés au panier
     const products = getProd()
+    if (products.length === 0) {
+        alert("Votre panier est vide !")
+        return false
+    }
     console.log(products)
+    // creation de l'objet data qui contient les objets contact et products
     const data = { contact, products }
+    // appel la fonction sendOrder avec comme argument data
     sendOrder(data)
 }
 
@@ -342,14 +371,16 @@ const order = (e) => {
  * @returns 
 */
 const getProd = () => {
-    // Récupération de l'item panier dans le localStorage
-    const prods = JSON.parse(localStorage.getItem('panier'))
     // creation du tableau products
     let products = []
-    // tour de boucle pour récupérer chaques elements de prods
-    for (let elem of prods) {
-        // Récupération de l'id des elem de prods, puis envoyés dans le tableau products
-        products.push(elem.id)
+    if (localStorage.getItem('panier')) {
+        // Récupération de l'item panier dans le localStorage
+        const prods = JSON.parse(localStorage.getItem('panier'))
+        // tour de boucle pour récupérer chaques elements de prods
+        for (let elem of prods) {
+            // Récupération de l'id des elem de prods, puis envoyés dans le tableau products
+            products.push(elem.id)
+        }
     }
     return products
 }
@@ -361,22 +392,28 @@ const getProd = () => {
  */
 const sendOrder = async (data) => {
     const options = {
+        // la méthode pour envoyer la demande (post)
         method: "POST",
+        // le corps de la demande : data sous forme de chaine de caractere
         body: JSON.stringify(data),
+        // objet headers avec les en-têtes à inclure dans la demande
         headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
         },
     };
     try {
+        // methode fetch pour envoyer une demande post a l'url avec les options définis ci-dessus
         const postFetch = await fetch("http://localhost:3000/api/products/order", options)
         if (!postFetch.ok) {
             throw new Error(`Une erreur s'est produite: ${postFetch.status}`)
         }
+        // attente de la reponse convertie en objet JSON
         const order = await postFetch.json()
         console.log(order.orderId)
         //localStorage.removeItem(key) qui permet d'enlever la clé souhaitée dans le localStorage
         localStorage.removeItem('panier')
+        // redirige l'utilisateur vers la page de confirmation + ajout de l'id de commande dans l'url
         document.location.href = `confirmation.html?orderId=${order.orderId}`
     } catch (error) {
         alert(error)
