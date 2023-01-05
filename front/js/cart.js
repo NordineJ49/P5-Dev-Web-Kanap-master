@@ -149,14 +149,20 @@ const displayProduct = (data, cart) => {
  */
 const changeProdQty = (cart, e) => {
     console.log(e.target.defaultValue)
-    //const defValue qui contient la valeur par defaut de l'element cible de l'évenement (valeur présente avant que l'utilisateur ne la modifie)
+    // "defaultValue" est une propriété de l'objet JavaScript qui représente la valeur par défaut
     const defValue = e.target.defaultValue
+    // valeur modifiée
+    const newValue = e.target.value;
     // Si la valeur à été modifiée et est inferieur a 1 et sup a 100
-    if (e.target.value < 1 || e.target.value > 100) {
+    if (newValue < 1 || newValue > 100) {
         // on retourne la valeur par défaut (valeur précédente) + alert
         e.target.value = defValue
         alert("La quantité saisie n'a pas été prise en compte")
         return
+    }
+    // sinon, defValue prend la valeur de newValue 
+    else {
+        defValue = newValue
     }
     // const elt qui contient l'element cible de l'evenement
     const elt = e.target;
