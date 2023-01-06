@@ -283,12 +283,15 @@ const attachEvent = () => {
 const checkReg1 = (val, name) => {
     // regex qui verifie que la chaine de caractere ne contient aucun des caracteres spécifiés entre crochet
     const reg1 = new RegExp(/^[^1-9²&~#"{}'()|\`^+=*,.?;:!§ù%¨$£¤µ<>°@_-]+$/)
+    // const result qui verifie si la val entrée dans l'input adresse est compatible avec reg1
     const result = reg1.test(val)
+    // si champ incorrect, on recupere la balise correspondante et un message d'erreur est envoyé + return false
     if (!result) {
         const text = document.getElementById(`${name}ErrorMsg`)
         text.textContent = "Veuillez entrer un champ valide"
         return false
     }
+    // sinon, on s'assure que la balise qui renvoi l'erreur est vide + return false
     document.getElementById(`${name}ErrorMsg`).textContent = ""
     return true
 }
@@ -429,5 +432,5 @@ const sendOrder = async (data) => {
     }
 }
 
-
+// la fonction getCart() est appelée
 getCart()
